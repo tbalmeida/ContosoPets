@@ -1,6 +1,7 @@
 ﻿using ContosoPets.Data;
 using ContosoPets.Models;
 using System;
+using System.Linq;
 
 namespace ContosoPets
 {
@@ -10,21 +11,44 @@ namespace ContosoPets
         {
             using ContosoPetsContext context = new ContosoPetsContext();
 
-            Product squeakyBone = new Product()
-            {
-                Name = "Squeacky Dog Bone",
-                Price = 4.99M
-            };
-            context.Products.Add(squeakyBone);
+            // step 1 - Product creation
+            /* 
+             * Product squeakyBone = new Product()
+             {
+                 Name = "Squeacky Dog Bone",
+                 Price = 4.99M
+             };
+             context.Products.Add(squeakyBone);
 
-            Product tennisBalls = new Product()
-            {
-                Name = "Tennis Ball 3-Pack",
-                Price = 9.99M
-            };
-            context.Add(tennisBalls);
+             Product tennisBalls = new Product()
+             {
+                 Name = "Tennis Ball 3-Pack",
+                 Price = 9.99M
+             };
+             context.Add(tennisBalls);
 
-            context.SaveChanges();
+             context.SaveChanges();
+             */
+
+            var products = context.Products
+                .Where(p => p.Price >= 5.00M)
+                .OrderBy(p => p.Name);
+
+            // alternative using LINQ
+            /*
+            var products = from product in context.Products
+                           where product.Price > 5.00M
+                           orderby product.Name
+                           select product;
+            */
+
+            foreach (Product p in products)
+            {
+                Console.WriteLine($"Id: {p.Id}");
+                Console.WriteLine($"Name: {p.Name}");
+                Console.WriteLine($"Price: {p.Price}");
+                Console.WriteLine(new String('-', 20));
+            }
 
         }
     }
