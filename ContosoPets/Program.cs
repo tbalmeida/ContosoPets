@@ -11,6 +11,19 @@ namespace ContosoPets
         {
             using ContosoPetsContext context = new ContosoPetsContext();
 
+            var squeakyBone = context.Products
+                .Where(p => p.Name == "Squeaky Dog Bone")
+                .FirstOrDefault();
+
+            if (squeakyBone is Product)
+            {
+                // step 3 - update the price
+                // squeakyBone.Price = 7.99M;
+
+                context.Remove(squeakyBone);
+            }
+            context.SaveChanges();
+
             // step 1 - Product creation
             /* 
              * Product squeakyBone = new Product()
@@ -29,19 +42,21 @@ namespace ContosoPets
 
              context.SaveChanges();
              */
+             // end step 1
 
+             // step 2 - read and output to console.
             var products = context.Products
                 .Where(p => p.Price >= 5.00M)
                 .OrderBy(p => p.Name);
-
-            // alternative using LINQ
             /*
+            // alternative using LINQ. Use the one above OR below, not both
+            
             var products = from product in context.Products
                            where product.Price > 5.00M
                            orderby product.Name
                            select product;
+            
             */
-
             foreach (Product p in products)
             {
                 Console.WriteLine($"Id: {p.Id}");
@@ -49,7 +64,8 @@ namespace ContosoPets
                 Console.WriteLine($"Price: {p.Price}");
                 Console.WriteLine(new String('-', 20));
             }
-
+            
+            // end step 2
         }
     }
 }
